@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Question For You 💗</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ffd6e7, #ffeef5);
+            overflow: hidden;
+        }
+
+        .card {
+            width: 90%;
+            max-width: 430px;
+            padding: 40px 25px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.94);
+            border-radius: 28px;
+            box-shadow: 0 15px 45px rgba(255, 70, 130, 0.25);
+            position: relative;
+            z-index: 10;
+        }
+
+        .heart {
+            font-size: 65px;
+            animation: heartbeat 1.2s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        h1 {
+            color: #ff4f87;
+            font-size: 32px;
+            margin: 15px 0 10px;
+        }
+
+        p {
+            color: #777;
+            line-height: 1.6;
+        }
+
+        .buttons {
+            margin-top: 30px;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
+            position: relative;
+        }
+
+        button {
+            border: none;
+            border-radius: 50px;
+            padding: 14px 27px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.25s ease,
+                        opacity 0.3s ease;
+            touch-action: manipulation;
+        }
+
+        #yesBtn {
+            background: #ff4f87;
+            color: white;
+            box-shadow: 0 7px 18px rgba(255, 79, 135, 0.35);
+            z-index: 5;
+        }
+
+        #noBtn {
+            background: #eeeeee;
+            color: #555;
+            z-index: 4;
+        }
+
+        .final {
+            display: none;
+        }
+
+        .final h2 {
+            color: #ff4f87;
+            font-size: 30px;
+        }
+
+        .final p {
+            color: #555;
+        }
+
+        .rickroll {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .floating-heart {
+            position: fixed;
+            bottom: -40px;
+            pointer-events: none;
+            z-index: 1;
+            animation: floatUp 5s linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 27px;
+            }
+
+            button {
+                padding: 12px 21px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+
+        <!-- QUESTION -->
+        <div id="question">
+
+            <div class="heart">💗</div>
+
+            <h1>Do you like me?</h1>
+
+            <p>
+                Be honest... 👀
+                <br>
+                Choose wisely. 😌
+            </p>
+
+            <div class="buttons">
+                <button id="yesBtn">YES 💗</button>
+                <button id="noBtn">NO 😭</button>
+            </div>
+
+        </div>
+
+
+        <!-- FINAL -->
+        <div class="final" id="final">
+
+            <div class="heart">💗</div>
+
+            <h2>YOU SAID YES! 🥹</h2>
+
+            <p>
+                I knew it. 😌❤️
+                <br><br>
+
+                Thank you for giving me a chance.
+                Whatever happens next,
+                I'm just happy you stayed until the end.
+                <br><br>
+
+                <b>Maybe this is the beginning of something special. 🌷</b>
+            </p>
+
+            <div class="rickroll">
+                🎵 Enjoy the music...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MUSIC -->
+    <audio id="rickroll" preload="auto">
+        <source src="rickroll.m4a" type="audio/mpeg">
+    </audio>
+
+
+    <script>
+
+        const yesBtn = document.getElementById("yesBtn");
+        const noBtn = document.getElementById("noBtn");
+
+        const question = document.getElementById("question");
+        const final = document.getElementById("final");
+
+        const rickroll = document.getElementById("rickroll");
+
+        let noClicks = 0;
+        let yesScale = 1;
+
+
+        // =========================
+        // YES BUTTON
+        // =========================
+
+        yesBtn.addEventListener("click", function () {
+
+            // Hide question
+            question.style.display = "none";
+
+            // Show final message
+            final.style.display = "block";
+
+            // Play Rickroll
+            rickroll.currentTime = 0;
+            rickroll.volume = 1;
+
+            rickroll.play().catch(function (error) {
+                console.log("Audio could not play:", error);
+            });
+
+            // Hearts
+            createHearts();
+        });
+
+
+        // =========================
+        // NO BUTTON
+        // =========================
+
+        noBtn.addEventListener("click", function () {
+
+            noClicks++;
+
+            // YES gets bigger
+            yesScale += 0.20;
+
+            yesBtn.style.transform =
+                `scale(${yesScale})`;
+
+
+            // NO gets smaller
+            let noScale =
+                Math.max(0.18, 1 - (noClicks * 0.11));
+
+
+            // Random movement
+            const x =
+                Math.floor(Math.random() * 220) - 110;
+
+            const y =
+                Math.floor(Math.random() * 100) - 50;
+
+
+            noBtn.style.transform =
+                `translate(${x}px, ${y}px) scale(${noScale})`;
+
+
+            // Different messages
+            const messages = [
+
+                "NO 😭",
+                "Are you sure? 🥺",
+                "Really? 😭",
+                "Think again 👀",
+                "Please? 🥹",
+                "Last chance! 😭",
+                "You sure about that? 💔",
+                "The NO is getting smaller 😂",
+                "Just say YES 😭",
+                "Okay... last last chance 😔"
+
+            ];
+
+
+            noBtn.textContent =
+                messages[
+                    Math.min(
+                        noClicks,
+                        messages.length - 1
+                    )
+                ];
+
+
+            // After enough NO clicks
+            if (noClicks >= 9) {
+
+                noBtn.style.opacity = "0";
+                noBtn.style.pointerEvents = "none";
+
+                yesBtn.style.transform =
+                    "scale(2.2)";
+            }
+
+        });
+
+
+        // =========================
+        // FLOATING HEARTS
+        // =========================
+
+        function createHearts() {
+
+            setInterval(function () {
+
+                const heart =
+                    document.createElement("div");
+
+                heart.className =
+                    "floating-heart";
+
+                const heartList = [
+                    "❤️",
+                    "💗",
+                    "💕",
+                    "💖",
+                    "💘",
+                    "💝",
+                    "🌷"
+                ];
+
+                heart.textContent =
+                    heartList[
+                        Math.floor(
+                            Math.random() *
+                            heartList.length
+                        )
+                    ];
+
+
+                heart.style.left =
+                    Math.random() * 100 + "vw";
+
+
+                heart.style.fontSize =
+                    (15 + Math.random() * 25) + "px";
+
+
+                document.body.appendChild(heart);
+
+
+                setTimeout(function () {
+                    heart.remove();
+                }, 5000);
+
+            }, 300);
+
+        }
+
+    </script>
+
+</body>
+</html>
